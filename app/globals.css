@@ -166,6 +166,39 @@ a:focus-visible, button:focus-visible {
 }
 .nav-cta:hover { background: var(--gold); color: var(--black); }
 
+/* Botón para pasar entre ventas y rentas ("Looking to rent?" / "Looking to buy?") */
+.nav-actions { display: flex; align-items: center; gap: 0.8rem; }
+.nav-cross {
+  color: var(--white);
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--black-border);
+  background: var(--black-card);
+  transition: border-color 0.3s, color 0.3s;
+  white-space: nowrap;
+}
+.nav-cross::after { content: ' →'; color: var(--gold); }
+.nav-cross:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Con el botón de cambio, el menú de ventas no entra en pantallas medianas: se compacta */
+@media (min-width: 769px) and (max-width: 1560px) {
+  nav.has-cross { padding: 1.2rem 2rem; gap: 1.5rem; }
+  nav.has-cross ul { gap: 1.4rem; }
+  nav.has-cross ul a { font-size: 0.86rem; letter-spacing: 0.1em; }
+  nav.has-cross .nav-logo { font-size: 1.1rem; }
+  nav.has-cross .nav-logo span,
+  nav.has-cross .nav-ig-handle { font-size: 0.95rem; }
+  nav.has-cross .nav-cta,
+  nav.has-cross .nav-cross { font-size: 0.8rem; padding: 0.5rem 0.9rem; }
+}
+@media (min-width: 769px) and (max-width: 1180px) {
+  nav.has-cross ul { display: none; }
+}
+
 /* ── TICKER ── */
 .ticker-bar {
   background: var(--gold);
@@ -942,6 +975,11 @@ footer {
   .nav-logo { flex-shrink: 0; }
   .nav-logo span { display: none; }
   .nav-cta { flex-shrink: 0; font-size: 0.68rem; padding: 0.4rem 0.8rem; white-space: nowrap; }
+  /* En el teléfono el menú se desplaza de costado: los botones van primero para que se vean sin deslizar */
+  .nav-actions { order: 1; flex-shrink: 0; gap: 0.5rem; }
+  nav ul { order: 2; }
+  .nav-cross { font-size: 0.68rem; padding: 0.4rem 0.7rem; }
+  nav.has-cross .nav-logo { font-size: 1rem; }
 
   /* HERO — exact mobile stacking order */
   #hero {

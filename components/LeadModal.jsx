@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useUI } from '../context/UIContext';
+import { submitLead } from '../lib/submitLead';
+import { trackFormStart } from '../lib/track';
 
 const guideFiles = {
   'Mexico Investment Guide': '/Mexico-Real-Estate-Investment-Guide.pdf',
@@ -15,14 +17,20 @@ export default function LeadModal() {
   const [email, setEmail] = useState('');
   const [country, setCountry] = useState('');
   const [sent, setSent] = useState(false);
+  const startedAt = useRef(null);
+
+  const onFieldFocus = () => {
+    if (!startedAt.current) startedAt.current = Date.now();
+    trackFormStart('guide_download');
+  };
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) closeLeadModal();
   };
 
   const handleSubmit = () => {
-    if (!name.trim() || !email.trim()) {
-      alert('Please enter your name and email.');
+    if (!name.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      alert('Please enter your name and a valid email.');
       return;
     }
     const file = guideFiles[leadModal.guideName];
@@ -36,6 +44,14 @@ export default function LeadModal() {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+
+    // Registrar la descarga en la planilla (no bloquea: el PDF ya se abrió).
+    submitLead(
+      'guide_download',
+      { name: name.trim(), email: email.trim(), country: country.trim(), guide: leadModal.guideName, interest: 'buy' },
+      { startedAt: startedAt.current }
+    );
+    startedAt.current = null;
 
     setSent(true);
     setTimeout(() => {
@@ -75,7 +91,7 @@ export default function LeadModal() {
                 fontSize: '0.9rem', color: 'var(--white-dim)', marginBottom: '1.8rem',
                 fontFamily: "'Libre Baskerville',serif", lineHeight: 1.7,
               }}>
-                Enter your details and we&apos;ll send the guide directly to your inbox.
+                Enter your details to open the guide. Augusto may follow up by email if you have questions.
               </p>
               <div className="form-field">
                 <label>Full Name</label>
@@ -83,6 +99,7 @@ export default function LeadModal() {
                   type="text"
                   placeholder="Your name"
                   value={name}
+                  onFocus={onFieldFocus}
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
@@ -92,6 +109,7 @@ export default function LeadModal() {
                   type="email"
                   placeholder="your@email.com"
                   value={email}
+                  onFocus={onFieldFocus}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
@@ -101,6 +119,7 @@ export default function LeadModal() {
                   type="text"
                   placeholder="United States"
                   value={country}
+                  onFocus={onFieldFocus}
                   onChange={(e) => setCountry(e.target.value)}
                 />
               </div>
@@ -119,7 +138,7 @@ export default function LeadModal() {
                 fontSize: '0.7rem', color: 'var(--white-muted)', marginTop: '1rem',
                 textAlign: 'center', letterSpacing: '0.05em',
               }}>
-                No spam. Your information is strictly confidential.
+                No spam. See our <a href="/privacy" target="_blank" rel="noopener" style={{ color: 'var(--gold)' }}>privacy notice</a>.
               </p>
             </div>
           </motion.div>

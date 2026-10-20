@@ -1,4 +1,12 @@
-export default function Footer() {
+const SALES_FOOTER_LINKS = [
+  { href: '#truth', label: 'Intelligence' },
+  { href: '#enclaves', label: 'Enclaves' },
+  { href: '#portfolio', label: 'Portfolio' },
+  { href: '#toolkit', label: 'Resources' },
+  { href: '#cta', label: 'Contact' },
+];
+
+export default function Footer({ links = SALES_FOOTER_LINKS }) {
   return (
     <footer>
       <div className="footer-logo">
@@ -6,11 +14,9 @@ export default function Footer() {
         <span>Augusto Lascano · El Doctor Inmobiliario</span>
       </div>
       <div className="footer-links">
-        <a href="#truth">Intelligence</a>
-        <a href="#enclaves">Enclaves</a>
-        <a href="#portfolio">Portfolio</a>
-        <a href="#toolkit">Resources</a>
-        <a href="#cta">Contact</a>
+        {links.map((link) => (
+          <a key={link.href} href={link.href}>{link.label}</a>
+        ))}
       </div>
       <div className="footer-copy">© 2025 El Doctor Inmobiliario. All rights reserved.</div>
     </footer>

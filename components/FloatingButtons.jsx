@@ -1,12 +1,15 @@
 "use client";
 
 import { motion } from 'framer-motion';
+import { INSTAGRAM_URL, WHATSAPP_MESSAGES, whatsappUrl } from '../lib/site';
+import { track } from '../lib/track';
 
-export default function FloatingButtons() {
+export default function FloatingButtons({ whatsappMessage = WHATSAPP_MESSAGES.sales }) {
   return (
     <>
       <motion.a
-        href="https://api.whatsapp.com/send?phone=5219841083283&text=Hello%2C%20I%27m%20interested%20in%20learning%20more%20about%20investment%20opportunities%20in%20Tulum."
+        href={whatsappUrl(whatsappMessage)}
+        onClick={() => track('whatsapp_click', { cta_location: 'floating' })}
         target="_blank"
         rel="noopener"
         className="wa-float"
@@ -21,7 +24,7 @@ export default function FloatingButtons() {
       </motion.a>
 
       <motion.a
-        href="https://www.instagram.com/eldoctor.inmobiliario"
+        href={INSTAGRAM_URL}
         target="_blank"
         rel="noopener"
         className="ig-float"

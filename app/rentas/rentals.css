@@ -1,0 +1,158 @@
+/* ══════════════════════════════════════════════════════════
+   RENTAS — tema invertido (fondo claro, texto oscuro)
+   Reutiliza las variables de globals.css. Los nombres son de color
+   (--black, --white) porque así nació el sitio: acá --black es el FONDO
+   y --white el TEXTO.
+   Contraste verificado (WCAG AA, texto normal ≥ 4,5:1) sobre #f5f0e8:
+   texto 16,6 · secundario 8,5 · tenue 5,3 · dorado de texto 5,2.
+   ══════════════════════════════════════════════════════════ */
+
+.theme-rentals {
+  --gold: #7d5f27;        /* el dorado original (#c5a059) da 2,2:1 sobre fondo claro */
+  --gold-light: #6b501f;  /* hover: más oscuro para no perder contraste */
+  --gold-dim: #a8874a;
+  --black: #f5f0e8;
+  --black-soft: #ece5d8;
+  --black-card: #fbf8f2;
+  --black-border: #d9cfbd;
+  --white: #14110d;
+  --white-dim: #4a443b;
+  --white-muted: #6b6255;
+
+  background: var(--black);
+  color: var(--white);
+  min-height: 100vh;
+}
+body:has(.theme-rentals) { background: #f5f0e8; }
+
+/* Valores que en globals.css están escritos directo en oscuro */
+.theme-rentals nav { background: rgba(245, 240, 232, 0.94); }
+.theme-rentals .btn-primary,
+.theme-rentals .form-submit { color: #fbf8f2; }
+.theme-rentals .btn-ghost { border-color: rgba(125, 95, 39, 0.45); }
+.theme-rentals .grain-overlay { opacity: 0.02; }
+.theme-rentals .form-field input { background: #fff; }
+.theme-rentals .photo-overlay {
+  background: linear-gradient(to right, var(--black) 0%, transparent 30%, transparent 100%);
+}
+.theme-rentals .gallery-modal-overlay,
+.theme-rentals .gallery-modal { color: #f5f0e8; }
+/* La galería se mantiene oscura: las fotos se ven mejor sobre negro */
+.theme-rentals .gallery-modal {
+  --white: #f5f0e8; --white-dim: #b8b0a0; --white-muted: #8a8072;
+  --black-card: #161616; --black-border: #222222; --gold: #c5a059;
+}
+
+/* ── Secciones alternadas ── */
+.rentals-alt { background: var(--black-soft); }
+
+/* ── Tarjetas de propiedades ── */
+.rentals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+.rental-card {
+  background: var(--black-card);
+  border: 1px solid var(--black-border);
+  height: 100%;
+  display: flex; flex-direction: column;
+}
+.rental-card-media {
+  position: relative; aspect-ratio: 4 / 3; width: 100%;
+  border: none; padding: 0; background: var(--black-soft);
+  cursor: pointer; overflow: hidden; display: block;
+}
+.rental-card-media:disabled { cursor: default; }
+.rental-card-placeholder {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white-muted);
+}
+.rental-card-sample,
+.rental-card-photos {
+  position: absolute; top: 1rem; padding: 0.25rem 0.7rem;
+  font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase;
+  background: #14110d; color: #f5f0e8;
+}
+.rental-card-sample { left: 1rem; background: #9a2c1f; }
+.rental-card-photos { right: 1rem; }
+.rental-card-body { padding: 1.6rem; display: flex; flex-direction: column; flex: 1; }
+.rental-card-zone {
+  font-size: 0.85rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--white-muted);
+}
+.rental-card-name {
+  font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 1.4rem;
+  color: var(--white); margin: 0.3rem 0 0.6rem;
+}
+.rental-card-price {
+  font-family: 'Bodoni Moda', serif; font-size: 1.6rem; color: var(--gold); font-weight: 700;
+}
+.rental-card-price span {
+  font-family: 'Raleway', sans-serif; font-size: 0.9rem; font-weight: 400; color: var(--white-muted);
+}
+.rental-card-facts {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem;
+  margin: 1.2rem 0 1.5rem; font-size: 0.95rem;
+}
+.rental-card-facts dt {
+  font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white-muted);
+}
+.rental-card-facts dd { color: var(--white-dim); }
+.rental-card-cta { margin-top: auto; width: 100%; text-align: center; }
+
+/* ── Proceso ── */
+.rentals-steps { list-style: none; margin-top: 3rem; display: grid; gap: 1px; background: var(--black-border); }
+.rentals-step {
+  background: var(--black-soft); padding: 1.6rem 2rem;
+  display: grid; grid-template-columns: 4rem 1fr; gap: 1rem; align-items: start;
+}
+.rentals-step-num { font-family: 'Bodoni Moda', serif; font-size: 1.8rem; color: var(--gold); line-height: 1; }
+.rentals-step h3 { font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 1.3rem; color: var(--white); }
+.rentals-step p { font-size: 1.05rem; color: var(--white-dim); margin-top: 0.3rem; }
+
+/* ── Sobre Augusto ── */
+.rentals-about { display: grid; grid-template-columns: 2fr 3fr; gap: 4rem; align-items: center; }
+.rentals-about-photo { position: relative; aspect-ratio: 4 / 5; overflow: hidden; }
+
+/* ── Preguntas frecuentes ── */
+.rentals-faq-answer { font-size: 1.02rem; color: var(--white-dim); line-height: 1.8; padding: 0 2rem 1.5rem; }
+
+/* ── Formulario ── */
+.rentals-form {
+  margin-top: 3rem; max-width: 820px;
+  background: var(--black-card); border: 1px solid var(--black-border); padding: 2.5rem;
+}
+.rentals-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.5rem; }
+.rentals-field-wide { grid-column: 1 / -1; }
+.rentals-form .form-field label { font-size: 0.85rem; }
+.rentals-form select,
+.rentals-form textarea {
+  width: 100%; background: #fff; border: 1px solid var(--black-border); color: var(--white);
+  padding: 0.7rem 1rem; font-size: 1.02rem; font-family: 'Raleway', sans-serif; outline: none;
+}
+.rentals-form select:focus,
+.rentals-form textarea:focus,
+.rentals-form input:focus { border-color: var(--gold); }
+.rentals-field-error { color: #9a2c1f; font-size: 0.9rem; margin-top: 0.3rem; }
+.rentals-consent {
+  display: flex; gap: 0.8rem; align-items: flex-start;
+  font-size: 0.95rem; color: var(--white-dim); margin: 1rem 0 0.3rem; line-height: 1.6;
+}
+.rentals-consent input { margin-top: 0.35rem; width: 1.1rem; height: 1.1rem; accent-color: var(--gold); flex-shrink: 0; }
+.rentals-consent a, .rentals-form-error a, .rentals-form-done a { color: var(--gold); }
+.rentals-form-error {
+  margin: 1rem 0; padding: 1rem 1.2rem; border: 1px solid #9a2c1f; color: #6f1f15; font-size: 0.95rem;
+}
+.rentals-form-done h3 { font-family: 'Bodoni Moda', serif; font-size: 1.6rem; color: var(--white); margin-bottom: 0.5rem; }
+.rentals-form-done p { color: var(--white-dim); }
+.form-submit:disabled { opacity: 0.6; cursor: wait; }
+.rentals-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+@media (max-width: 768px) {
+  .rentals-form { padding: 1.5rem 1.1rem; }
+  .rentals-form-grid { grid-template-columns: 1fr; }
+  .rentals-about { grid-template-columns: 1fr; gap: 2rem; }
+  .rentals-step { grid-template-columns: 3rem 1fr; padding: 1.2rem; }
+  .rentals-grid { grid-template-columns: 1fr; }
+}

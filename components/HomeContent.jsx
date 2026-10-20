@@ -1,9 +1,6 @@
 "use client";
 
-import { UIProvider } from '../context/UIContext';
-import SmoothScroll from './SmoothScroll';
-import FloatingButtons from './FloatingButtons';
-import Nav from './Nav';
+import SiteShell from './SiteShell';
 import Ticker from './Ticker';
 import Hero from './Hero';
 import AboutMePanel from './AboutMePanel';
@@ -16,42 +13,40 @@ import Toolkit from './Toolkit';
 import Resilience from './Resilience';
 import Metrics from './Metrics';
 import CTA from './CTA';
-import Footer from './Footer';
 import ModalViewer from './ModalViewer';
 import GalleryModal from './GalleryModal';
 import EnclaveLightbox from './EnclaveLightbox';
 import LeadModal from './LeadModal';
 
+const RENTALS_LINK = { href: '/rentas', label: 'Looking to rent?', id: 'nav_to_rentals' };
+
 export default function HomeContent() {
   return (
-    <UIProvider>
-      <SmoothScroll>
-        <div className="grain-overlay" />
+    <SiteShell
+      crossLink={RENTALS_LINK}
+      overlays={
+        <>
+          <ModalViewer />
+          <GalleryModal />
+          <EnclaveLightbox />
+          <LeadModal />
+        </>
+      }
+    >
+      <Ticker />
 
-        <FloatingButtons />
-        <Nav />
-        <Ticker />
+      <Hero />
+      <AboutMePanel />
 
-        <Hero />
-        <AboutMePanel />
-
-        <Truth />
-        <Macro />
-        <Enclaves />
-        <Portfolio />
-        <Audit />
-        <Toolkit />
-        <Resilience />
-        <Metrics />
-        <CTA />
-
-        <Footer />
-
-        <ModalViewer />
-        <GalleryModal />
-        <EnclaveLightbox />
-        <LeadModal />
-      </SmoothScroll>
-    </UIProvider>
+      <Truth />
+      <Macro />
+      <Enclaves />
+      <Portfolio />
+      <Audit />
+      <Toolkit />
+      <Resilience />
+      <Metrics />
+      <CTA />
+    </SiteShell>
   );
 }

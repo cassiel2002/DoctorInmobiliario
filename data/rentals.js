@@ -13,6 +13,7 @@
 
 export const rentalsNavLinks = [
   { href: '#homes', label: 'Homes' },
+  { href: '#villas', label: 'Villas' },
   { href: '#process', label: 'How it works' },
   { href: '#faq', label: 'FAQ' },
   { href: '#inquire', label: 'Inquire' },
@@ -20,7 +21,7 @@ export const rentalsNavLinks = [
 
 export const rentalsFooterLinks = [
   { href: '#homes', label: 'Homes' },
-  { href: '#process', label: 'How it works' },
+  { href: '#villas', label: 'Villas' },
   { href: '#inquire', label: 'Inquire' },
   { href: '/', label: 'Buy in Tulum' },
 ];

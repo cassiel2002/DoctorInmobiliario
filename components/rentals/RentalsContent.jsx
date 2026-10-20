@@ -5,6 +5,7 @@ import SiteShell from '../SiteShell';
 import GalleryModal from '../GalleryModal';
 import RentalsHero from './RentalsHero';
 import RentalsGrid from './RentalsGrid';
+import VillasGrid from './VillasGrid';
 import RentalsProcess from './RentalsProcess';
 import RentalsAbout from './RentalsAbout';
 import RentalsFAQ from './RentalsFAQ';
@@ -20,10 +21,10 @@ const hasFaq = rentalFaq.some((item) => item.answer);
 const navLinks = hasFaq ? rentalsNavLinks : rentalsNavLinks.filter((l) => l.href !== '#faq');
 
 export default function RentalsContent() {
-  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [selected, setSelected] = useState(null);
 
-  const inquireAbout = (property) => {
-    setSelectedProperty(property);
+  const inquireAbout = (kind) => (item) => {
+    setSelected({ kind, item });
     document.getElementById('inquire')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
@@ -38,11 +39,12 @@ export default function RentalsContent() {
       overlays={<GalleryModal />}
     >
       <RentalsHero />
-      <RentalsGrid onInquire={inquireAbout} />
+      <RentalsGrid onInquire={inquireAbout('home')} />
+      <VillasGrid onInquire={inquireAbout('villa')} />
       <RentalsProcess />
       <RentalsAbout />
       <RentalsFAQ />
-      <RentalInquiryForm selectedProperty={selectedProperty} />
+      <RentalInquiryForm selected={selected} />
     </SiteShell>
   );
 }

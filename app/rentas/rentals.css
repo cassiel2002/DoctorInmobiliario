@@ -156,3 +156,31 @@ body:has(.theme-rentals) { background: #f5f0e8; }
   .rentals-step { grid-template-columns: 3rem 1fr; padding: 1.2rem; }
   .rentals-grid { grid-template-columns: 1fr; }
 }
+
+/* ── Villas ── */
+.villa-stats { display: flex; gap: 1.2rem; font-size: 0.95rem; color: var(--white-muted); margin: 0.2rem 0 0.9rem; }
+.villa-stats strong { font-family: 'Bodoni Moda', serif; font-size: 1.3rem; color: var(--gold); font-weight: 700; margin-right: 0.2rem; }
+.villa-summary { font-size: 1rem; color: var(--white-dim); line-height: 1.7; }
+.villa-amenities { list-style: none; margin: 1rem 0; display: grid; gap: 0.3rem; font-size: 0.92rem; color: var(--white-dim); }
+.villa-amenities li::before { content: '◆ '; color: var(--gold); font-size: 0.7rem; }
+.villa-services { font-size: 0.9rem; color: var(--white-muted); font-style: italic; margin-bottom: 1rem; }
+.villa-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.4rem; }
+.villa-tags span {
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  border: 1px solid var(--black-border); padding: 0.2rem 0.6rem; color: var(--white-muted);
+}
+.villa-card { background: var(--black-card); }
+
+/* ── Selector de tipo de consulta ── */
+.rentals-mode { border: none; display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.8rem; }
+.rentals-mode legend {
+  font-size: 0.85rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white-muted); margin-bottom: 0.6rem;
+}
+.rentals-mode label {
+  display: flex; align-items: center; gap: 0.5rem; cursor: pointer;
+  padding: 0.7rem 1.1rem; border: 1px solid var(--black-border); font-size: 0.98rem; color: var(--white-dim);
+}
+.rentals-mode label.active { border-color: var(--gold); color: var(--white); }
+.rentals-mode input { accent-color: var(--gold); }
+.rentals-form input[type='number'],
+.rentals-form input[type='date'] { width: 100%; }

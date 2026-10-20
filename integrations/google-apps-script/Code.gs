@@ -19,7 +19,8 @@ var SHEET_NAME = 'Leads';
 var COLUMNS = [
   'lead_id', 'received_at', 'form_id', 'page',
   'name', 'email', 'whatsapp', 'country', 'country_cf',
-  'interest', 'property_id', 'move_in', 'budget_range', 'bedrooms', 'pets', 'guide', 'message',
+  'interest', 'property_id', 'move_in', 'budget_range', 'bedrooms', 'pets',
+  'check_in', 'check_out', 'guests', 'occasion', 'guide', 'message',
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'landing_page', 'referrer',
   // ── Completa Augusto ──
   'stage', 'qualified', 'last_contact', 'next_action', 'next_action_date', 'meeting', 'outcome', 'lost_reason', 'notes',
@@ -67,15 +68,17 @@ function getSheet() {
 
 function notify(email, row) {
   if (!email) return;
-  var kind = row.form_id === 'guide_download' ? 'Descarga de guía' : 'Consulta de renta';
+  var kinds = { guide_download: 'Descarga de guía', rental_inquiry: 'Consulta de renta anual', villa_inquiry: 'Consulta de villa' };
+  var kind = kinds[row.form_id] || 'Consulta';
   var lines = [
     kind + ' — ' + (row.name || ''),
     '',
     'Correo: ' + (row.email || '-'),
     'WhatsApp: ' + (row.whatsapp || '-'),
     'País: ' + (row.country || '-'),
-    'Mudanza: ' + (row.move_in || '-'),
-    'Presupuesto: ' + (row.budget_range || '-'),
+    row.form_id === 'villa_inquiry'
+      ? 'Fechas: ' + (row.check_in || '-') + ' → ' + (row.check_out || '-') + ' · Huéspedes: ' + (row.guests || '-') + ' · Ocasión: ' + (row.occasion || '-')
+      : 'Mudanza: ' + (row.move_in || '-') + ' · Presupuesto: ' + (row.budget_range || '-'),
     'Propiedad: ' + (row.property_id || '-'),
     'Mensaje: ' + (row.message || '-'),
     '',

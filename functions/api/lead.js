@@ -36,6 +36,18 @@ const SCHEMAS = {
     },
     requireConsent: true,
   },
+  villa_inquiry: {
+    required: ['name', 'country', 'check_in', 'check_out', 'guests'],
+    oneOf: [['email', 'whatsapp']],
+    fields: {
+      name: 120, email: 160, whatsapp: 30, country: 80, check_in: 10, check_out: 10, guests: 3,
+      occasion: 20, message: 1000, property_id: 60, interest: 40,
+    },
+    enums: {
+      occasion: ['', 'vacation', 'wedding', 'retreat', 'celebration', 'corporate', 'other'],
+    },
+    requireConsent: true,
+  },
   guide_download: {
     required: ['name', 'email', 'guide'],
     oneOf: [],
@@ -90,6 +102,14 @@ export function validateLead(formId, rawFields) {
   if (data.whatsapp && !PHONE_RE.test(data.whatsapp)) return { error: 'invalid_whatsapp' };
   if (data.move_in !== undefined && data.move_in && !/^\d{4}-\d{2}$/.test(data.move_in)) {
     return { error: 'invalid_move_in' };
+  }
+  if (data.check_in !== undefined) {
+    const dateRe = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRe.test(data.check_in)) return { error: 'invalid_check_in' };
+    if (!dateRe.test(data.check_out)) return { error: 'invalid_check_out' };
+    if (data.check_out <= data.check_in) return { error: 'invalid_dates' };
+    const guests = Number(data.guests);
+    if (!Number.isInteger(guests) || guests < 1 || guests > 60) return { error: 'invalid_guests' };
   }
   if (schema.requireConsent && rawFields.consent !== true) return { error: 'missing_consent' };
 

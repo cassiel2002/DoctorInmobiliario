@@ -128,3 +128,26 @@ test('con Turnstile configurado exige un token válido', async () => {
   const res = await handleLead(request(payload()), env, turnstileFails);
   assert.equal(res.status, 400);
 });
+
+const validVilla = {
+  name: 'Luis', email: 'luis@example.com', whatsapp: '', country: 'Mexico', check_in: '2027-03-10',
+  check_out: '2027-03-14', guests: '18', occasion: 'wedding', message: '', property_id: 'akubali',
+  interest: 'villa_stay', consent: true, company: '',
+};
+
+test('villa: consulta válida se guarda con fechas y huéspedes', async () => {
+  const sheets = sheetsMock();
+  const res = await handleLead(request({ ...payload(validVilla), form_id: 'villa_inquiry' }), ENV, sheets.fetchImpl);
+  assert.equal(res.status, 200);
+  assert.equal(sheets.calls[0].body.row.check_in, '2027-03-10');
+  assert.equal(sheets.calls[0].body.row.guests, '18');
+});
+
+test('villa: valida fechas, huéspedes y ocasión', () => {
+  assert.equal(validateLead('villa_inquiry', { ...validVilla, check_out: '2027-03-09' }).error, 'invalid_dates');
+  assert.equal(validateLead('villa_inquiry', { ...validVilla, check_in: 'marzo' }).error, 'invalid_check_in');
+  assert.equal(validateLead('villa_inquiry', { ...validVilla, guests: '0' }).error, 'invalid_guests');
+  assert.equal(validateLead('villa_inquiry', { ...validVilla, guests: '2.5' }).error, 'invalid_guests');
+  assert.equal(validateLead('villa_inquiry', { ...validVilla, occasion: 'party' }).error, 'invalid_occasion');
+  assert.equal(validateLead('villa_inquiry', { ...validVilla, consent: false }).error, 'missing_consent');
+});

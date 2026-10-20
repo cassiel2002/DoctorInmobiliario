@@ -60,5 +60,6 @@ export const IMAGES = {
  */
 export function img(name) {
   if (!name) return '';
+  if (/^https?:\/\//.test(name)) return name; // URL completa (por ej. fotos de villas)
   return IMAGES[name] || `/${name}`;
 }

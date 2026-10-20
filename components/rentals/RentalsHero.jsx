@@ -16,14 +16,15 @@ export default function RentalsHero() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
       >
-        <div className="hero-label">Tulum · Long-term rentals</div>
+        <div className="hero-label">Tulum · Rentals</div>
         <h1>
           <span className="h1-line1">Live in Tulum,</span>
           <span className="h1-line2"> <em>for a year or more.</em></span>
         </h1>
         <p className="hero-sub">
           Homes chosen with a doctor&apos;s eye: we check the house, the street and the
-          lease before you see them — so you move in without surprises.
+          lease before you see them — so you move in without surprises. Staying shorter? See our villas
+          for stays, events and groups.
         </p>
         <div className="gold-rule" />
         <div className="hero-btns">

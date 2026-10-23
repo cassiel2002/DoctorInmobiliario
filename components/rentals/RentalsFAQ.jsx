@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Reveal from '../Reveal';
 import Expand from '../Expand';
+import SectionBlend from './SectionBlend';
 import { rentalFaq } from '../../data/rentals';
 
 // Solo se muestran las preguntas que ya tienen respuesta de Augusto.
@@ -14,7 +15,7 @@ export default function RentalsFAQ() {
   if (answered.length === 0) return null;
 
   return (
-    <section id="faq" className="rentals-alt">
+    <SectionBlend id="faq">
       <Reveal>
         <div className="section-label">Tulum, unfiltered</div>
         <h2>The questions <em>everyone asks.</em></h2>
@@ -41,6 +42,6 @@ export default function RentalsFAQ() {
           );
         })}
       </div>
-    </section>
+    </SectionBlend>
   );
 }

@@ -43,8 +43,22 @@ body:has(.theme-rentals) { background: #f5f0e8; }
   --black-card: #161616; --black-border: #222222; --gold: #c5a059;
 }
 
-/* ── Secciones alternadas ── */
-.rentals-alt { background: var(--black-soft); }
+/* ── Secciones con fondo fundido (ver SectionBlend.jsx) ──
+   El color de fondo vive en una capa propia con los bordes difuminados,
+   así el paso de una sección a otra es un degradé y no un corte recto. */
+.blend-section { position: relative; isolation: isolate; }
+.blend-bg {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: var(--black-soft);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7rem, #000 calc(100% - 7rem), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 7rem, #000 calc(100% - 7rem), transparent 100%);
+}
+@media (max-width: 768px) {
+  .blend-bg {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 4rem, #000 calc(100% - 4rem), transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0, #000 4rem, #000 calc(100% - 4rem), transparent 100%);
+  }
+}
 
 /* ── Tarjetas de propiedades ── */
 .rentals-grid {
@@ -169,7 +183,123 @@ body:has(.theme-rentals) { background: #f5f0e8; }
   font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
   border: 1px solid var(--black-border); padding: 0.2rem 0.6rem; color: var(--white-muted);
 }
-.villa-card { background: var(--black-card); }
+
+/* Portadas grandes (las 3 primeras villas): foto a todo el ancho con el nombre encima */
+.villa-features { display: grid; gap: 3rem; margin-top: 3rem; }
+.villa-feature { background: var(--black-card); border: 1px solid var(--black-border); }
+.villa-feature-cover { position: relative; aspect-ratio: 21 / 9; min-height: 380px; max-height: 640px; overflow: hidden; background: var(--black-soft); }
+.villa-feature-media {
+  position: absolute; inset: 0; width: 100%; border: none; padding: 0;
+  background: var(--black-soft); cursor: pointer; display: block;
+}
+.villa-feature-media:disabled { cursor: default; }
+.villa-feature-media img { transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+.villa-feature-media:not(:disabled):hover img { transform: scale(1.03); }
+/* Degradado para que el texto claro se lea sobre cualquier foto */
+.villa-feature-cover::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(10, 8, 5, 0.86) 0%, rgba(10, 8, 5, 0.4) 42%, rgba(10, 8, 5, 0) 72%);
+}
+.villa-feature-caption {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; pointer-events: none;
+  padding: 2.5rem; color: #f5f0e8;
+}
+.villa-feature-style { font-size: 0.9rem; letter-spacing: 0.16em; text-transform: uppercase; color: #e0c388; }
+.villa-feature-name {
+  font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: clamp(2rem, 4.2vw, 3.2rem);
+  line-height: 1.1; color: #f5f0e8; margin: 0.4rem 0 0.8rem;
+}
+.villa-feature-caption .villa-stats { color: #e8e0d0; margin: 0; }
+.villa-feature-caption .villa-stats strong { color: #e0c388; }
+.villa-feature-body {
+  padding: 2.2rem 2.5rem 2.5rem; display: grid; grid-template-columns: 1.2fr 1fr;
+  column-gap: 3rem; align-items: start;
+}
+.villa-feature-body .villa-summary { grid-column: 1; font-size: 1.08rem; }
+.villa-feature-body .villa-services { grid-column: 1; margin: 1rem 0 0; }
+.villa-feature-body .villa-tags { grid-column: 1; margin: 1.2rem 0 0; }
+.villa-feature-body .villa-amenities { grid-column: 2; grid-row: 1 / span 3; margin: 0; }
+.villa-feature-body .villa-cta { grid-column: 2; justify-self: start; margin-top: 1.6rem; }
+
+/* Pestaña "More properties" */
+.villas-more { margin-top: 3rem; }
+.villas-more-toggle {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.9rem;
+  background: transparent; border: 1px solid var(--gold); color: var(--gold);
+  padding: 1.1rem 1.5rem; cursor: pointer; font-family: 'Raleway', sans-serif;
+  font-size: 0.95rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600;
+  transition: background 0.3s, color 0.3s;
+}
+.villas-more-toggle:hover { background: var(--gold); color: #fbf8f2; }
+.villas-more-count {
+  min-width: 1.7rem; height: 1.7rem; padding: 0 0.4rem; display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid currentColor; border-radius: 999px; font-size: 0.8rem; letter-spacing: 0;
+}
+.villas-more-icon { font-size: 1.4rem; line-height: 1; letter-spacing: 0; }
+.villas-more-list { display: grid; gap: 1.5rem; }
+
+/* Filas horizontales: foto a la izquierda, descripción a la derecha */
+.villa-row {
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  background: var(--black-card); border: 1px solid var(--black-border);
+}
+.villa-row-media {
+  position: relative; min-height: 340px; width: 100%; border: none; padding: 0;
+  background: var(--black-soft); cursor: pointer; overflow: hidden; display: block;
+}
+.villa-row-media:disabled { cursor: default; }
+.villa-row-media img { transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1); }
+.villa-row-media:not(:disabled):hover img { transform: scale(1.04); }
+.villa-row-body { padding: 2rem 2.2rem; display: flex; flex-direction: column; align-items: flex-start; }
+.villa-row-body .villa-cta { margin-top: auto; }
+
+.villa-feature-media:focus-visible,
+.villa-row-media:focus-visible { outline: 2px solid #f5f0e8; outline-offset: -5px; }
+.villas-more-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+@media (max-width: 900px) {
+  .villa-feature-body { grid-template-columns: 1fr; padding: 1.6rem 1.4rem 1.8rem; }
+  .villa-feature-body .villa-amenities,
+  .villa-feature-body .villa-cta { grid-column: 1; grid-row: auto; }
+  .villa-feature-body .villa-amenities { margin-top: 1.2rem; }
+}
+@media (max-width: 768px) {
+  .villa-features { gap: 2rem; }
+  .villa-feature-cover { aspect-ratio: 4 / 5; min-height: 0; max-height: none; }
+  .villa-feature-caption { padding: 1.4rem 1.2rem; }
+  .villa-row { grid-template-columns: 1fr; }
+  .villa-row-media { min-height: 0; aspect-ratio: 4 / 3; }
+  .villa-row-body { padding: 1.4rem 1.2rem 1.6rem; }
+  .villa-row-body .villa-cta { margin-top: 1.4rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .villa-feature-media img, .villa-row-media img { transition: none; }
+}
+
+/* ── WhatsApp como vía principal ── */
+.rentals-wa-block { margin-top: 2.5rem; max-width: 820px; }
+.rentals-wa-big { width: 100%; padding: 1.2rem 2rem; font-size: 1.05rem; text-align: center; cursor: pointer; }
+.rentals-wa-note { margin-top: 0.7rem; font-size: 0.95rem; color: var(--white-muted); }
+/* Botón que se ve como link dentro de un texto (usa WhatsAppButton) */
+.rentals-link-button {
+  background: none; border: none; padding: 0; font: inherit; color: var(--gold);
+  text-decoration: underline; text-underline-offset: 3px; cursor: pointer;
+}
+.rentals-link-button:hover { color: var(--gold-light); }
+.rental-card-email, .villa-email { margin-top: 0.9rem; text-align: center; font-size: 0.95rem; color: var(--white-muted); }
+.rental-card-email .rentals-link-button, .villa-email .rentals-link-button { font-size: 0.95rem; }
+
+/* Formulario alternativo plegado */
+.rentals-email-alt { margin-top: 2rem; max-width: 820px; }
+.rentals-email-toggle {
+  background: none; border: none; padding: 0.5rem 0; cursor: pointer; color: var(--gold);
+  font-family: 'Raleway', sans-serif; font-size: 1.05rem; letter-spacing: 0.04em;
+  text-decoration: underline; text-underline-offset: 4px;
+}
+.rentals-email-toggle:hover { color: var(--gold-light); }
+.rentals-email-alt .rentals-form { margin-top: 0; }
+.rentals-form-about { margin-bottom: 1.2rem; font-size: 1rem; color: var(--white-dim); }
+.rentals-link-button:focus-visible, .rentals-email-toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 
 /* ── Selector de tipo de consulta ── */
 .rentals-mode { border: none; display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.8rem; }

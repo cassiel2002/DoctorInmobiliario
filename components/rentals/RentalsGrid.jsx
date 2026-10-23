@@ -2,9 +2,11 @@
 
 import Image from 'next/image';
 import Reveal from '../Reveal';
+import WhatsAppButton from '../WhatsAppButton';
 import { useUI } from '../../context/UIContext';
 import { img } from '../../data/images';
 import { rentalProperties } from '../../data/rentals';
+import { interestMessage } from '../../lib/site';
 import { track } from '../../lib/track';
 
 const mxn = new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 });
@@ -75,23 +77,40 @@ function RentalCard({ property, index, onInquire }) {
               </div>
             ))}
           </dl>
-          <button
-            type="button"
+          <WhatsAppButton
             className="btn-primary rental-card-cta"
-            onClick={() => {
-              track('property_click', { property_id: property.id, action: 'inquire' });
-              onInquire(property);
-            }}
+            message={interestMessage(property.name)}
+            propertyId={property.id}
+            location="card"
           >
-            Ask about this home
-          </button>
+            Ask on WhatsApp
+          </WhatsAppButton>
+          <p className="rental-card-email">
+            or{' '}
+            <button
+              type="button"
+              className="rentals-link-button"
+              onClick={() => {
+                track('property_click', { property_id: property.id, action: 'inquire_email' });
+                onInquire(property);
+              }}
+            >
+              by email
+            </button>
+          </p>
         </div>
       </article>
     </Reveal>
   );
 }
 
+// Hasta que haya propiedades reales de renta anual, la sección no se muestra
+// (mismo criterio que RentalsFAQ: no mostrar contenido de relleno/muestra).
+const realProperties = rentalProperties.filter((p) => !p.sample);
+
 export default function RentalsGrid({ onInquire }) {
+  if (realProperties.length === 0) return null;
+
   return (
     <section id="homes">
       <Reveal>
@@ -104,7 +123,7 @@ export default function RentalsGrid({ onInquire }) {
       </Reveal>
 
       <div className="rentals-grid">
-        {rentalProperties.map((property, i) => (
+        {realProperties.map((property, i) => (
           <RentalCard key={property.id} property={property} index={i} onInquire={onInquire} />
         ))}
       </div>

@@ -17,7 +17,7 @@ var SHEET_NAME = 'Leads';
 
 // Orden de columnas. Las últimas las completa Augusto.
 var COLUMNS = [
-  'lead_id', 'received_at', 'form_id', 'page',
+  'lead_id', 'received_at', 'form_id', 'ref', 'page',
   'name', 'email', 'whatsapp', 'country', 'country_cf',
   'interest', 'property_id', 'move_in', 'budget_range', 'bedrooms', 'pets',
   'check_in', 'check_out', 'guests', 'occasion', 'guide', 'message',
@@ -75,13 +75,13 @@ function notify(email, row) {
     '',
     'Correo: ' + (row.email || '-'),
     'WhatsApp: ' + (row.whatsapp || '-'),
-    'País: ' + (row.country || '-'),
     row.form_id === 'villa_inquiry'
-      ? 'Fechas: ' + (row.check_in || '-') + ' → ' + (row.check_out || '-') + ' · Huéspedes: ' + (row.guests || '-') + ' · Ocasión: ' + (row.occasion || '-')
-      : 'Mudanza: ' + (row.move_in || '-') + ' · Presupuesto: ' + (row.budget_range || '-'),
+      ? 'Fechas: ' + (row.check_in || '-') + ' → ' + (row.check_out || '-') + ' · Huéspedes: ' + (row.guests || '-')
+      : (row.form_id === 'rental_inquiry' ? 'Mudanza: ' + (row.move_in || '-') : 'País: ' + (row.country || '-')),
     'Propiedad: ' + (row.property_id || '-'),
     'Mensaje: ' + (row.message || '-'),
     '',
+    'Ref: ' + (row.ref || '-'),
     'Origen: ' + [row.utm_source, row.utm_medium, row.utm_campaign].filter(String).join(' / '),
     'ID: ' + row.lead_id,
     '',

@@ -30,6 +30,16 @@ export default function SmoothScroll({ children }) {
     }
     rafId = requestAnimationFrame(raf);
 
+    // Permite que otros componentes pidan un desplazamiento suave por código
+    // (por ej. "Ask about this villa" → formulario) sin usar scrollIntoView
+    // nativo, que compite con Lenis y se siente como un salto.
+    // Uso: window.dispatchEvent(new CustomEvent('smooth-scroll-to', { detail: { id: 'inquire' } }))
+    function handleScrollRequest(e) {
+      const target = document.getElementById(e.detail?.id);
+      if (target) lenis.scrollTo(target, { duration: 1.8, offset: -80 });
+    }
+    window.addEventListener('smooth-scroll-to', handleScrollRequest);
+
     // Interceptar clics en anclas (#truth, #macro, etc. del Nav/Footer)
     // para que también usen el scroll suave en vez de saltar de golpe.
     function handleAnchorClick(e) {
@@ -45,7 +55,8 @@ export default function SmoothScroll({ children }) {
     document.addEventListener('click', handleAnchorClick);
 
     return () => {
-      document.removeEventListener('click', handleAnchorClick);
+        document.removeEventListener('click', handleAnchorClick);
+      window.removeEventListener('smooth-scroll-to', handleScrollRequest);
       cancelAnimationFrame(rafId);
       lenis.destroy();
     };

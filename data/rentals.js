@@ -108,11 +108,3 @@ export const rentalFaq = [
   { question: 'Are pets allowed?', answer: null },
   { question: 'What is the minimum lease term?', answer: null },
 ];
-
-// Rangos del presupuesto mensual del formulario (MXN).
-export const budgetRanges = [
-  { value: 'lt_30k', label: 'Under MXN 30,000' },
-  { value: '30_40k', label: 'MXN 30,000 – 40,000' },
-  { value: '40_50k', label: 'MXN 40,000 – 50,000' },
-  { value: 'gt_50k', label: 'Over MXN 50,000' },
-];

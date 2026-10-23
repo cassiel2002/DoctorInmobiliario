@@ -1,11 +1,12 @@
 "use client";
 
 import Reveal from '../Reveal';
+import SectionBlend from './SectionBlend';
 import { rentalProcess } from '../../data/rentals';
 
 export default function RentalsProcess() {
   return (
-    <section id="process" className="rentals-alt">
+    <SectionBlend id="process">
       <Reveal>
         <div className="section-label">How it works</div>
         <h2>Renting with <em>a diagnosis first.</em></h2>
@@ -26,6 +27,6 @@ export default function RentalsProcess() {
           </Reveal>
         ))}
       </ol>
-    </section>
+    </SectionBlend>
   );
 }

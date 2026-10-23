@@ -22,30 +22,26 @@ const MAX_BODY_BYTES = 10_000;
 const MIN_ELAPSED_MS = 2_500; // una persona no completa el formulario en menos tiempo
 
 const SCHEMAS = {
+  // Formularios cortos: WhatsApp es la vía principal y la calificación
+  // (presupuesto, mascotas, dormitorios, ocasión) la hace Augusto en la conversación.
   rental_inquiry: {
-    required: ['name', 'country', 'move_in', 'budget_range'],
+    required: ['name', 'move_in'],
     oneOf: [['email', 'whatsapp']],
     fields: {
-      name: 120, email: 160, whatsapp: 30, country: 80, move_in: 7, budget_range: 20,
-      bedrooms: 5, pets: 5, message: 1000, property_id: 60, interest: 40,
+      name: 120, email: 160, whatsapp: 30, move_in: 7, message: 1000,
+      property_id: 60, interest: 40, ref: 30,
     },
-    enums: {
-      budget_range: ['lt_30k', '30_40k', '40_50k', 'gt_50k'],
-      bedrooms: ['', '1', '2', '3', '4+'],
-      pets: ['', 'yes', 'no'],
-    },
+    enums: {},
     requireConsent: true,
   },
   villa_inquiry: {
-    required: ['name', 'country', 'check_in', 'check_out', 'guests'],
+    required: ['name', 'check_in', 'check_out', 'guests'],
     oneOf: [['email', 'whatsapp']],
     fields: {
-      name: 120, email: 160, whatsapp: 30, country: 80, check_in: 10, check_out: 10, guests: 3,
-      occasion: 20, message: 1000, property_id: 60, interest: 40,
+      name: 120, email: 160, whatsapp: 30, check_in: 10, check_out: 10, guests: 3, message: 1000,
+      property_id: 60, interest: 40, ref: 30,
     },
-    enums: {
-      occasion: ['', 'vacation', 'wedding', 'retreat', 'celebration', 'corporate', 'other'],
-    },
+    enums: {},
     requireConsent: true,
   },
   guide_download: {

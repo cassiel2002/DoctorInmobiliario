@@ -11,9 +11,9 @@ const ENV = {
 };
 
 const validRental = {
-  name: 'Ana Pérez', email: 'ana@example.com', whatsapp: '', country: 'Canada',
-  move_in: '2027-01', budget_range: '30_40k', bedrooms: '2', pets: 'no',
-  message: 'Hi', property_id: 'sample-01', interest: 'long_term_rental', consent: true, company: '',
+  name: 'Ana Pérez', email: 'ana@example.com', whatsapp: '',
+  move_in: '2027-01', message: 'Hi', property_id: 'halo', ref: 'IG-BIO-HALO',
+  interest: 'long_term_rental', consent: true, company: '',
 };
 
 function request(body, { origin = ORIGIN, contentType = 'application/json' } = {}) {
@@ -49,6 +49,31 @@ test('guarda una consulta válida y devuelve lead_id', async () => {
   assert.equal(sheets.calls[0].body.row.lead_id, body.lead_id);
   assert.equal(sheets.calls[0].body.row.utm_source, 'instagram');
   assert.equal(sheets.calls[0].body.row.company, undefined, 'el campo trampa no se guarda');
+});
+
+test('el ref llega a la fila de la planilla', async () => {
+  const sheets = sheetsMock();
+  const res = await handleLead(request(payload()), ENV, sheets.fetchImpl);
+  assert.equal(res.status, 200);
+  assert.equal(sheets.calls[0].body.row.ref, 'IG-BIO-HALO');
+});
+
+test('el ref se recorta a 30 caracteres y se limpia', async () => {
+  const sheets = sheetsMock();
+  await handleLead(request(payload({ ...validRental, ref: `IG-${'X'.repeat(50)}` })), ENV, sheets.fetchImpl);
+  assert.equal(sheets.calls[0].body.row.ref.length, 30);
+});
+
+test('los campos del formulario largo anterior ya no se guardan', async () => {
+  const sheets = sheetsMock();
+  const old = { ...validRental, country: 'Canada', budget_range: '30_40k', bedrooms: '2', pets: 'no' };
+  const res = await handleLead(request(payload(old)), ENV, sheets.fetchImpl);
+  assert.equal(res.status, 200, 'un valor viejo no debe hacer fallar el envío');
+  const { row } = sheets.calls[0].body;
+  assert.equal(row.budget_range, undefined);
+  assert.equal(row.bedrooms, undefined);
+  assert.equal(row.pets, undefined);
+  assert.equal(row.country, undefined);
 });
 
 test('rechaza orígenes no permitidos', async () => {
@@ -89,7 +114,7 @@ test('valida campos obligatorios, formatos y consentimiento', () => {
   assert.equal(validateLead('rental_inquiry', { ...validRental, name: '' }).error, 'missing_name');
   assert.equal(validateLead('rental_inquiry', { ...validRental, email: '', whatsapp: '' }).error, 'missing_email_or_whatsapp');
   assert.equal(validateLead('rental_inquiry', { ...validRental, email: 'no-arroba' }).error, 'invalid_email');
-  assert.equal(validateLead('rental_inquiry', { ...validRental, budget_range: '1M' }).error, 'invalid_budget_range');
+  assert.equal(validateLead('rental_inquiry', { ...validRental, move_in: '' }).error, 'missing_move_in');
   assert.equal(validateLead('rental_inquiry', { ...validRental, move_in: 'pronto' }).error, 'invalid_move_in');
   assert.equal(validateLead('rental_inquiry', { ...validRental, consent: 'true' }).error, 'missing_consent');
   assert.equal(validateLead('otro_form', validRental).error, 'unknown_form');
@@ -130,8 +155,8 @@ test('con Turnstile configurado exige un token válido', async () => {
 });
 
 const validVilla = {
-  name: 'Luis', email: 'luis@example.com', whatsapp: '', country: 'Mexico', check_in: '2027-03-10',
-  check_out: '2027-03-14', guests: '18', occasion: 'wedding', message: '', property_id: 'akubali',
+  name: 'Luis', email: 'luis@example.com', whatsapp: '', check_in: '2027-03-10',
+  check_out: '2027-03-14', guests: '18', message: '', property_id: 'akubali', ref: 'DIR-AKUBALI',
   interest: 'villa_stay', consent: true, company: '',
 };
 
@@ -141,13 +166,13 @@ test('villa: consulta válida se guarda con fechas y huéspedes', async () => {
   assert.equal(res.status, 200);
   assert.equal(sheets.calls[0].body.row.check_in, '2027-03-10');
   assert.equal(sheets.calls[0].body.row.guests, '18');
+  assert.equal(sheets.calls[0].body.row.ref, 'DIR-AKUBALI');
 });
 
-test('villa: valida fechas, huéspedes y ocasión', () => {
+test('villa: valida fechas y huéspedes', () => {
   assert.equal(validateLead('villa_inquiry', { ...validVilla, check_out: '2027-03-09' }).error, 'invalid_dates');
   assert.equal(validateLead('villa_inquiry', { ...validVilla, check_in: 'marzo' }).error, 'invalid_check_in');
   assert.equal(validateLead('villa_inquiry', { ...validVilla, guests: '0' }).error, 'invalid_guests');
   assert.equal(validateLead('villa_inquiry', { ...validVilla, guests: '2.5' }).error, 'invalid_guests');
-  assert.equal(validateLead('villa_inquiry', { ...validVilla, occasion: 'party' }).error, 'invalid_occasion');
   assert.equal(validateLead('villa_inquiry', { ...validVilla, consent: false }).error, 'missing_consent');
 });

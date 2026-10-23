@@ -2,8 +2,16 @@
 
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import WhatsAppButton from '../WhatsAppButton';
 import { img } from '../../data/images';
+import { rentalProperties } from '../../data/rentals';
+import { WHATSAPP_MESSAGES } from '../../lib/site';
 import { track } from '../../lib/track';
+
+// Botón secundario. Sin propiedades reales de renta anual, lleva a las villas.
+const hasHomes = rentalProperties.some((p) => !p.sample);
+const seeHref = hasHomes ? '#homes' : '#villas';
+const seeLabel = hasHomes ? 'See available homes' : 'See available villas';
 
 export default function RentalsHero() {
   const onCta = (id) => () => track('cta_click', { cta_id: id, cta_location: 'hero' });
@@ -28,8 +36,10 @@ export default function RentalsHero() {
         </p>
         <div className="gold-rule" />
         <div className="hero-btns">
-          <a href="#homes" className="btn-primary" onClick={onCta('hero_see_homes')}>See available homes</a>
-          <a href="#inquire" className="btn-ghost" onClick={onCta('hero_inquire')}>Tell us what you need</a>
+          <WhatsAppButton className="btn-primary" message={WHATSAPP_MESSAGES.rentals} location="hero">
+            Chat on WhatsApp
+          </WhatsAppButton>
+          <a href={seeHref} className="btn-ghost" onClick={onCta('hero_see_properties')}>{seeLabel}</a>
         </div>
       </motion.div>
 
@@ -47,8 +57,10 @@ export default function RentalsHero() {
       </div>
 
       <div className="hero-btns-mobile">
-        <a href="#homes" className="btn-primary" onClick={onCta('hero_see_homes')}>See available homes</a>
-        <a href="#inquire" className="btn-ghost" onClick={onCta('hero_inquire')}>Tell us what you need</a>
+        <WhatsAppButton className="btn-primary" message={WHATSAPP_MESSAGES.rentals} location="hero">
+          Chat on WhatsApp
+        </WhatsAppButton>
+        <a href={seeHref} className="btn-ghost" onClick={onCta('hero_see_properties')}>{seeLabel}</a>
       </div>
     </section>
   );

@@ -2,6 +2,12 @@ import './globals.css';
 
 const SITE_URL = 'https://eldoctorinmobiliario.com';
 
+// Imagen para compartir en redes (Open Graph / Twitter Card). No existe un
+// archivo /og-image.jpg en public/: se usa la foto del hero ya alojada en
+// Cloudinary, recortada a 1200x630 (tamaño estándar de OG).
+const OG_IMAGE =
+  'https://res.cloudinary.com/dupkltqnw/image/upload/c_fill,g_auto,w_1200,h_630,f_jpg,q_auto/v1789248706/augusto-hero_htlwzp.jpg';
+
 export const metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -39,7 +45,7 @@ export const metadata = {
       'Institutional-grade real estate intelligence for the discerning global investor in Tulum, Mexican Caribbean.',
     images: [
       {
-        url: '/og-image.jpg',
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: 'El Doctor Inmobiliario — Tulum Real Estate',
@@ -51,7 +57,7 @@ export const metadata = {
     title: 'El Doctor Inmobiliario | Strategic Capital Allocation – Mexican Caribbean',
     description:
       'Institutional-grade real estate intelligence for the discerning global investor in Tulum, Mexican Caribbean.',
-    images: ['/og-image.jpg'],
+    images: [OG_IMAGE],
   },
   robots: {
     index: true,

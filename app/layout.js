@@ -1,6 +1,6 @@
 import './globals.css';
 
-const SITE_URL = 'https://www.eldoctorinmobiliario.com';
+const SITE_URL = 'https://eldoctorinmobiliario.com';
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),

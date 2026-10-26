@@ -5,7 +5,7 @@
 // Requerido con output: 'export': se genera una sola vez en el build.
 export const dynamic = 'force-static';
 
-const SITE_URL = 'https://www.eldoctorinmobiliario.com';
+const SITE_URL = 'https://eldoctorinmobiliario.com';
 
 export default function sitemap() {
   return [

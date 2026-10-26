@@ -180,6 +180,7 @@ export const toolkitData = [
     title: 'Mexico Investment Guide',
     desc: 'Legal framework, closing costs, fideicomiso structure, and tax implications for foreign buyers in the Mexican Caribbean.',
     file: 'Mexico-Real-Estate-Investment-Guide.pdf',
+    available: true,
   },
   {
     id: 'moxi-guide',
@@ -189,6 +190,8 @@ export const toolkitData = [
     title: 'Mortgage Solutions via MoXi',
     desc: 'Financing options available to US & Canadian citizens. Rates, qualifications, and step-by-step process timeline.',
     file: 'MoXi-Mortgage-Solutions.pdf',
+    // No existe el PDF todavía en public/: no se muestra hasta tenerlo (ver Toolkit.jsx).
+    available: false,
   },
 ];
 

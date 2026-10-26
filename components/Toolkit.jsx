@@ -4,6 +4,9 @@ import Reveal from './Reveal';
 import { toolkitData } from '../data/content';
 import { useUI } from '../context/UIContext';
 
+// Solo se muestran las guías que ya tienen su PDF en public/ (ver data/content.js).
+const availableGuides = toolkitData.filter((item) => item.available !== false);
+
 export default function Toolkit() {
   const { openLeadModal } = useUI();
 
@@ -19,7 +22,7 @@ export default function Toolkit() {
       </Reveal>
 
       <div className="toolkit-grid-new">
-        {toolkitData.map((item, i) => (
+        {availableGuides.map((item, i) => (
           <Reveal key={item.id} delay={i * 0.1}>
             <div className="toolkit-card-new">
               <div className="toolkit-card-top-bar" />

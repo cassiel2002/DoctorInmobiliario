@@ -16,6 +16,8 @@ export default function LeadModal() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [country, setCountry] = useState('');
+  const [consent, setConsent] = useState(false);
+  const [error, setError] = useState('');
   const [sent, setSent] = useState(false);
   const startedAt = useRef(null);
 
@@ -33,6 +35,11 @@ export default function LeadModal() {
       alert('Please enter your name and a valid email.');
       return;
     }
+    if (!consent) {
+      setError('We need your consent to send you this guide.');
+      return;
+    }
+    setError('');
     const file = guideFiles[leadModal.guideName];
     if (!file) return;
 
@@ -48,7 +55,10 @@ export default function LeadModal() {
     // Registrar la descarga en la planilla (no bloquea: el PDF ya se abrió).
     submitLead(
       'guide_download',
-      { name: name.trim(), email: email.trim(), country: country.trim(), guide: leadModal.guideName, interest: 'buy' },
+      {
+        name: name.trim(), email: email.trim(), country: country.trim(), guide: leadModal.guideName,
+        interest: 'buy', consent: true,
+      },
       { startedAt: startedAt.current }
     );
     startedAt.current = null;
@@ -60,6 +70,8 @@ export default function LeadModal() {
       setName('');
       setEmail('');
       setCountry('');
+      setConsent(false);
+      setError('');
     }, 1500);
   };
 
@@ -123,6 +135,21 @@ export default function LeadModal() {
                   onChange={(e) => setCountry(e.target.value)}
                 />
               </div>
+              <label className="rentals-consent" style={{ marginTop: '1rem' }}>
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => {
+                    setConsent(e.target.checked);
+                    if (e.target.checked) setError('');
+                  }}
+                />
+                <span>
+                  I agree that El Doctor Inmobiliario uses my details to send me this guide, as described
+                  in the <a href="/privacy" target="_blank" rel="noopener">privacy notice</a>.
+                </span>
+              </label>
+              {error && <p className="rentals-field-error">{error}</p>}
               <button
                 className="form-submit"
                 style={{
@@ -134,12 +161,6 @@ export default function LeadModal() {
               >
                 {sent ? '✓ Guide opened!' : 'Send Me The Guide →'}
               </button>
-              <p style={{
-                fontSize: '0.7rem', color: 'var(--white-muted)', marginTop: '1rem',
-                textAlign: 'center', letterSpacing: '0.05em',
-              }}>
-                No spam. See our <a href="/privacy" target="_blank" rel="noopener" style={{ color: 'var(--gold)' }}>privacy notice</a>.
-              </p>
             </div>
           </motion.div>
         </motion.div>

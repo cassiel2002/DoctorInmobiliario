@@ -121,8 +121,13 @@ test('valida campos obligatorios, formatos y consentimiento', () => {
   assert.ok(validateLead('rental_inquiry', { ...validRental, email: '', whatsapp: '+1 555 123 4567' }).data);
 });
 
-test('descarga de guía: no exige consentimiento', () => {
-  const { data, error } = validateLead('guide_download', { name: 'Bo', email: 'bo@example.com', guide: 'Mexico Investment Guide' });
+test('descarga de guía: exige consentimiento', () => {
+  const sinConsentimiento = validateLead('guide_download', { name: 'Bo', email: 'bo@example.com', guide: 'Mexico Investment Guide' });
+  assert.equal(sinConsentimiento.error, 'missing_consent');
+
+  const { data, error } = validateLead('guide_download', {
+    name: 'Bo', email: 'bo@example.com', guide: 'Mexico Investment Guide', consent: true,
+  });
   assert.equal(error, undefined);
   assert.equal(data.guide, 'Mexico Investment Guide');
 });

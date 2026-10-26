@@ -49,7 +49,7 @@ const SCHEMAS = {
     oneOf: [],
     fields: { name: 120, email: 160, country: 80, guide: 80, interest: 40 },
     enums: {},
-    requireConsent: false,
+    requireConsent: true,
   },
 };
 

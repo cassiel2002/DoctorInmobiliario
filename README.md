@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# El Doctor Inmobiliario
 
-## Getting Started
+Sitio de Augusto Lascano, asesor inmobiliario en Tulum. Next.js (App Router) con
+exportación estática (`output: 'export'`), publicado en Cloudflare Pages. Incluye
+la página de ventas y `/rentas` (rentas anuales y villas), con formularios recibidos
+por una función de Cloudflare (`functions/api/lead.js`).
 
-First, run the development server:
+## Comandos
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm dev      # servidor de desarrollo, http://localhost:3000
+pnpm test     # tests de functions/api/lead.js (node:test)
+pnpm lint     # eslint
+pnpm build    # genera la carpeta out/ para publicar
+pnpm preview  # sirve out/ localmente, para revisar el build antes de publicar
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Despliegue
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Se publica en Cloudflare Pages desde la rama `feat/whatsapp-cta-rentas`. El comando
+de build es `pnpm build` y la carpeta de salida es `out`; `functions/` se despliega
+sola como Cloudflare Pages Functions.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Backend de formularios
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Ver [`docs/BACKEND.md`](docs/BACKEND.md): arquitectura, puesta en marcha (planilla,
+Apps Script, variables de Cloudflare) y qué hacer si algo falla.

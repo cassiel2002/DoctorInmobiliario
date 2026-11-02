@@ -34,7 +34,14 @@ export default function PrivacyPage() {
       <h2>Your rights</h2>
       <p>Access, rectification, cancellation and opposition (ARCO). {PENDING} How to exercise them.</p>
       <h2>Cookies and analytics</h2>
-      <p>{PENDING}</p>
+      <p>
+        This site uses Google Analytics 4 to measure, in aggregate, how visitors arrive and which
+        pages and buttons they use. Analytics cookies are only set if you accept them in the cookie
+        notice (or, outside the European Economic Area, the United Kingdom and Switzerland, unless you
+        decline them). We never send your name, email or phone number to Google Analytics. This site
+        does not use advertising cookies. To change your choice, clear this site&apos;s data in your
+        browser and the notice will appear again.
+      </p>
     </main>
   );
 }

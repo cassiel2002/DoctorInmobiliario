@@ -18,7 +18,7 @@ import GalleryModal from './GalleryModal';
 import EnclaveLightbox from './EnclaveLightbox';
 import LeadModal from './LeadModal';
 
-const RENTALS_LINK = { href: '/rentas', label: 'Looking to rent?', id: 'nav_to_rentals' };
+const RENTALS_LINK = { href: '/rentas', label: 'Looking to rent?', shortLabel: 'Rent', id: 'nav_to_rentals' };
 
 export default function HomeContent() {
   return (

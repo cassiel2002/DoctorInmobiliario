@@ -14,7 +14,7 @@ import { rentalFaq, rentalProperties, rentalsFooterLinks, rentalsNavLinks } from
 import { WHATSAPP_MESSAGES } from '../../lib/site';
 
 const NAV_CTA = { href: '#inquire', label: 'Inquire', external: false, id: 'nav_inquire' };
-const SALES_LINK = { href: '/', label: 'Looking to buy?', id: 'nav_to_sales' };
+const SALES_LINK = { href: '/', label: 'Looking to buy?', shortLabel: 'Buy', id: 'nav_to_sales' };
 
 // Si todavía no hay respuestas en las preguntas frecuentes, el menú no las ofrece.
 const hasFaq = rentalFaq.some((item) => item.answer);

@@ -11,7 +11,8 @@ const DEFAULT_CTA = { href: CALENDLY_URL, label: 'Schedule Call', external: true
 /**
  * links:     anclas del menú de la página
  * cta:       botón principal { href, label, external, id }
- * crossLink: botón para cambiar entre ventas y rentas { href, label, id }
+ * crossLink: botón para cambiar entre ventas y rentas { href, label, shortLabel, id }
+ *            (shortLabel se muestra en teléfonos, donde el texto largo no entra)
  */
 export default function Nav({ links = salesNavLinks, cta = DEFAULT_CTA, crossLink }) {
   const [scrolled, setScrolled] = useState(false);
@@ -49,7 +50,8 @@ export default function Nav({ links = salesNavLinks, cta = DEFAULT_CTA, crossLin
             className="nav-cross"
             onClick={() => track('cta_click', { cta_id: crossLink.id, cta_location: 'nav' })}
           >
-            {crossLink.label}
+            <span className="nav-cross-long">{crossLink.label}</span>
+            <span className="nav-cross-short" aria-hidden="true">{crossLink.shortLabel || crossLink.label}</span>
           </a>
         )}
         <motion.a

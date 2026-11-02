@@ -28,10 +28,16 @@ funnel (de dónde vino, qué hizo) con la comercial (si se calificó, si cerró)
 | WhatsApp | GA4 | `whatsapp_click` (`cta_location`) |
 | Empezó el formulario | GA4 | `form_start` (`form_id`) |
 | Consulta guardada | GA4 + planilla | `generate_lead` (`form_id`, `lead_id`) / fila nueva |
+| Consulta por WhatsApp | Planilla (a mano) | fila con `form_id` = `whatsapp_manual` y el `Ref:` del mensaje en `ref` |
 | Calificado, reunión, cierre | Planilla | columnas `stage`, `qualified`, `meeting`, `outcome` (las completa Augusto) |
 
-Los eventos se envían al `dataLayer` desde `lib/track.js`. Nunca se manda nombre,
-correo ni teléfono a GA4.
+Los eventos se envían a GA4 con `gtag('event')` desde `lib/track.js`
+(`components/Analytics.jsx` carga GA4). Nunca se manda nombre, correo ni teléfono a GA4.
+
+**WhatsApp es la vía principal y no pasa por el servidor.** Para que el funnel
+cierre, Augusto anota cada consulta de WhatsApp en la planilla: `form_id` =
+`whatsapp_manual`, `ref` = el código `Ref:` que trae el mensaje (por ejemplo
+`IG-BIO-HALO`), y el resto de las columnas que sepa.
 
 ## Puesta en marcha (una sola vez)
 
@@ -40,6 +46,9 @@ correo ni teléfono a GA4.
 1. Crear una planilla nueva, por ejemplo "CRM El Doctor".
 2. Extensiones → Apps Script. Pegar el contenido de
    `integrations/google-apps-script/Code.gs` y guardar.
+   Elegir `configurarCRM` en el menú de funciones y tocar **Ejecutar** (autorizar
+   los permisos). Crea la pestaña "Leads" con listas desplegables, la pestaña
+   "Resumen" y pone la zona horaria de Tulum. Se puede repetir sin perder datos.
 3. Configuración del proyecto → Propiedades del script → agregar:
    - `WEBHOOK_SECRET`: una clave larga al azar (por ejemplo, generada con
      `openssl rand -hex 32`). No la escribas en el código ni en el chat.
@@ -61,6 +70,9 @@ correo ni teléfono a GA4.
    - `SHEETS_WEBHOOK_SECRET` (secreto): la misma clave del paso 1.
    - `ALLOWED_ORIGINS`: `https://www.eldoctorinmobiliario.com,https://eldoctorinmobiliario.com`
      (más la URL de Preview de Pages si querés probar ahí).
+   - `NEXT_PUBLIC_GA_ID` (variable común, no secreto): el ID de medición de GA4
+     (`G-XXXXXXX`). Se lee **en el build**: después de cargarla hay que volver a
+     desplegar. Sin ella, el sitio no carga GA4 ni muestra el aviso de cookies.
 3. Seguridad → WAF → crear una regla de límite de velocidad para `/api/lead`
    (por ejemplo, 5 pedidos por minuto por IP). El plan gratuito incluye una.
 
@@ -71,9 +83,14 @@ correo ni teléfono a GA4.
   función ya lo verifica cuando la variable existe.
 - **Aviso de privacidad**: `/privacy` es un borrador. El texto final lo tiene que
   revisar un abogado.
-- **Google Tag Manager + GA4**: instalar GTM y crear en GA4 los eventos de la tabla
-  de arriba; marcar `generate_lead` como evento clave. Cargar los tags solo con
-  consentimiento de cookies.
+- **GA4** (ya integrado, falta la cuenta): crear la propiedad en
+  analytics.google.com → flujo de datos web con el dominio → copiar el ID `G-…` a
+  `NEXT_PUBLIC_GA_ID`. Los eventos llegan solos; en GA4 → Administrar → Eventos
+  clave, marcar `generate_lead` (y `whatsapp_click`) cuando aparezcan.
+  Consentimiento (Consent Mode v2): publicidad siempre denegada; analítica denegada
+  hasta aceptar en el EEE, Reino Unido y Suiza, y activa en el resto salvo que la
+  persona la rechace en el aviso. Si más adelante se usa Google Tag Manager o el
+  píxel de Meta, se agregan en `components/Analytics.jsx`.
 
 ## Probar
 
@@ -97,3 +114,5 @@ WhatsApp. Es el comportamiento esperado.
 | `not_configured` (500) | Faltan `SHEETS_WEBHOOK_URL` o `SHEETS_WEBHOOK_SECRET` |
 | `storage_failed` (502) | Clave distinta entre Cloudflare y Apps Script, o la implementación no es "Cualquier usuario" |
 | Llega la fila pero no el correo | Falta `NOTIFY_EMAIL` o no se autorizó MailApp |
+| Cambié `Code.gs` y no se nota | Apps Script sirve la versión implementada: Implementar → Administrar implementaciones → editar → Nueva versión (la URL `/exec` no cambia) |
+| GA4 no recibe nada | Falta `NEXT_PUBLIC_GA_ID` o no se volvió a desplegar después de cargarla; revisar con GA4 → DebugView |

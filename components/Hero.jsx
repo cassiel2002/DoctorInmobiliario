@@ -51,8 +51,9 @@ export default function Hero() {
         <div className="photo-overlay" />
         <motion.div
           className="hero-roi-overlay"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
+          // x: '-50%' centra el recuadro: framer-motion pisa el transform del CSS.
+          initial={{ opacity: 0, x: '-50%', y: 15 }}
+          animate={{ opacity: 1, x: '-50%', y: 0 }}
           transition={{ delay: 0.4, duration: 0.7 }}
         >
           <div className="hero-roi-pct">7–12%</div>

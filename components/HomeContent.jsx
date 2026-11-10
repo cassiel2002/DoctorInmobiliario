@@ -24,6 +24,7 @@ export default function HomeContent() {
   return (
     <SiteShell
       crossLink={RENTALS_LINK}
+      featuredCross
       overlays={
         <>
           <ModalViewer />

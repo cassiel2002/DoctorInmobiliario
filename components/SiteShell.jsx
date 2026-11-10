@@ -13,6 +13,7 @@ import { captureAttribution } from '../lib/utm';
  * proveedor de modales, scroll suave, menú, botones flotantes y pie.
  *
  * theme:    undefined (ventas, oscuro) | 'rentals' (colores invertidos)
+ * featuredCross: el crossLink va grande en el centro del menú (ver Nav)
  * overlays: modales propios de cada página, al final del árbol
  */
 export default function SiteShell({
@@ -20,6 +21,7 @@ export default function SiteShell({
   navLinks,
   navCta,
   crossLink,
+  featuredCross,
   footerLinks,
   whatsappMessage,
   overlays,
@@ -33,7 +35,7 @@ export default function SiteShell({
     <>
       <div className="grain-overlay" />
       <FloatingButtons whatsappMessage={whatsappMessage} />
-      <Nav links={navLinks} cta={navCta} crossLink={crossLink} />
+      <Nav links={navLinks} cta={navCta} crossLink={crossLink} featured={featuredCross} />
       {children}
       <Footer links={footerLinks} />
       {overlays}

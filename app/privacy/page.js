@@ -24,11 +24,15 @@ export default function PrivacyPage() {
       <h2>What data we collect</h2>
       <p>
         When you fill in a form on this site: name, email and/or WhatsApp number, country of
-        residence, and the details of your request (move-in date, budget range, preferences,
-        message). We also record the page and campaign that brought you to the site.
+        residence, and the details of your request (what you are looking for, move-in date, budget
+        range, timeline, preferences, message) or your answers to our satisfaction survey. We also record the page and campaign that brought you to the site.
       </p>
       <h2>What we use it for</h2>
-      <p>To reply to your request and follow up on it. {PENDING}</p>
+      <p>
+        To reply to your request and follow up on it. If you tick the optional box for market updates, we may
+        also send you occasional emails about the market and new opportunities; you can stop them at any time by
+        replying &quot;unsubscribe&quot;. Answers to our satisfaction survey are used to improve our service. {PENDING}
+      </p>
       <h2>Who we share it with</h2>
       <p>{PENDING} Service providers used to store and process requests.</p>
       <h2>Your rights</h2>

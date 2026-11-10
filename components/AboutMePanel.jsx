@@ -1,13 +1,25 @@
 "use client";
 
+import { useEffect } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useUI } from '../context/UIContext';
 import { aboutCredentials, aboutPillars } from '../data/content';
 import { img } from '../data/images';
+import { CREDENTIALS_PDF, hasDocument } from '../lib/documents';
+import { track } from '../lib/track';
+
+const showCredentials = hasDocument(CREDENTIALS_PDF);
 
 export default function AboutMePanel() {
-  const { aboutMeOpen, toggleAboutMe, closeAboutMe, openPDF } = useUI();
+  const { aboutMeOpen, toggleAboutMe, closeAboutMe } = useUI();
+
+  // Al abrir, bajar hasta el panel: en escritorio el botón está arriba del
+  // hero y el panel aparece debajo de la foto, fuera de la pantalla.
+  useEffect(() => {
+    if (!aboutMeOpen) return;
+    window.dispatchEvent(new CustomEvent('smooth-scroll-to', { detail: { id: 'about-me-panel', duration: 0.9 } }));
+  }, [aboutMeOpen]);
 
   return (
     <AnimatePresence initial={false}>
@@ -19,7 +31,7 @@ export default function AboutMePanel() {
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: 'auto', opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
         >
           <div className="about-panel-inner">
             <div className="about-close-row">
@@ -34,6 +46,7 @@ export default function AboutMePanel() {
                     src={img('augusto-aboutme.jpeg')}
                     alt="Augusto Lascano – El Doctor Inmobiliario"
                     fill
+                    priority
                     sizes="340px"
                     className="about-photo"
                     style={{ objectFit: 'cover', objectPosition: 'center top' }}
@@ -47,13 +60,20 @@ export default function AboutMePanel() {
                       <span>{cred}</span>
                     </div>
                   ))}
-                  <button
-                    className="btn-ghost"
-                    style={{ marginTop: '1.5rem', fontSize: '0.82rem' }}
-                    onClick={openPDF}
-                  >
-                    View Credentials →
-                  </button>
+                  {showCredentials && (
+                    // Pestaña nueva y no un iframe: en Android e iOS un PDF dentro
+                    // de un iframe no se muestra.
+                    <a
+                      className="btn-ghost"
+                      style={{ marginTop: '1.5rem', fontSize: '0.82rem' }}
+                      href={`/${CREDENTIALS_PDF}`}
+                      target="_blank"
+                      rel="noopener"
+                      onClick={() => track('cta_click', { cta_id: 'view_credentials', cta_location: 'about' })}
+                    >
+                      View Credentials →
+                    </a>
+                  )}
                 </div>
               </div>
 

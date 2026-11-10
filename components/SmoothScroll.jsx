@@ -23,6 +23,10 @@ export default function SmoothScroll({ children }) {
     });
     lenisRef.current = lenis;
 
+    // Margen para que el destino no quede tapado por el menú fijo (su alto
+    // cambia: en el celular la página de ventas tiene un menú de dos filas).
+    const navOffset = () => -((document.querySelector('nav')?.offsetHeight ?? 72) + 8);
+
     let rafId;
     function raf(time) {
       lenis.raf(time);
@@ -36,7 +40,7 @@ export default function SmoothScroll({ children }) {
     // Uso: window.dispatchEvent(new CustomEvent('smooth-scroll-to', { detail: { id: 'inquire' } }))
     function handleScrollRequest(e) {
       const target = document.getElementById(e.detail?.id);
-      if (target) lenis.scrollTo(target, { duration: 1.8, offset: -80 });
+      if (target) lenis.scrollTo(target, { duration: e.detail?.duration ?? 1.8, offset: navOffset() });
     }
     window.addEventListener('smooth-scroll-to', handleScrollRequest);
 
@@ -49,13 +53,13 @@ export default function SmoothScroll({ children }) {
       const target = id ? document.getElementById(id) : null;
       if (!target) return;
       e.preventDefault();
-      lenis.scrollTo(target, { duration: 1.5, offset: -80 });
+      lenis.scrollTo(target, { duration: 1.5, offset: navOffset() });
     }
 
     document.addEventListener('click', handleAnchorClick);
 
     return () => {
-        document.removeEventListener('click', handleAnchorClick);
+      document.removeEventListener('click', handleAnchorClick);
       window.removeEventListener('smooth-scroll-to', handleScrollRequest);
       cancelAnimationFrame(rafId);
       lenis.destroy();

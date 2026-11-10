@@ -26,8 +26,13 @@ export default function Audit() {
           const isOpen = openId === point.id;
           const isLast = i === auditData.length - 1;
           return (
-            <Reveal key={point.id} delay={i * 0.06} amount={0.15}>
-              <div className="audit-point" style={isLast ? { borderRight: 'none' } : undefined}>
+            <Reveal
+              key={point.id}
+              className="audit-point"
+              style={isLast ? { borderRight: 'none' } : undefined}
+              delay={i * 0.06}
+              amount={0.15}
+            >
                 <span className="due-num-style">{point.num}</span>
                 <div className="due-icon-wrap">
                   <svg viewBox="0 0 24 24" strokeWidth="1.5" fill="none" stroke="currentColor">
@@ -51,7 +56,6 @@ export default function Audit() {
                 >
                   +
                 </motion.button>
-              </div>
             </Reveal>
           );
         })}

@@ -54,8 +54,7 @@ function PropertyCard({ property, index }) {
   const currentSrc = carouselMode ? img(property.images[imgIndex]) : img(property.cover);
 
   return (
-    <Reveal delay={index * 0.08}>
-      <div className="prop-card">
+    <Reveal className="prop-card" delay={index * 0.08}>
         <div
           className={`prop-img-area ${carouselMode ? 'carousel-mode' : ''}`}
           onClick={handleOpen}
@@ -122,7 +121,6 @@ function PropertyCard({ property, index }) {
             </button>
           </div>
         </div>
-      </div>
     </Reveal>
   );
 }

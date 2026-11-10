@@ -5,7 +5,7 @@ import { createContext, useCallback, useContext, useRef, useState } from 'react'
 /**
  * UIContext centraliza el estado de todos los modales / paneles
  * que en el HTML original se manejaban con funciones globales
- * (openModal, openVideoModal, openPDF, openGallery, openEnclave,
+ * (openModal, openVideoModal, openGallery, openEnclave,
  * openLeadModal, toggleAboutMe, etc).
  */
 const UIContext = createContext(null);
@@ -13,7 +13,7 @@ const UIContext = createContext(null);
 export function UIProvider({ children }) {
   const savedScrollY = useRef(0);
 
-  // Modal genérico (video / PDF credenciales)
+  // Modal genérico (video)
   const [modal, setModal] = useState({ open: false, title: '', src: '' });
 
   // Galería de fotos de propiedades del portfolio
@@ -52,13 +52,6 @@ export function UIProvider({ children }) {
     openModal(
       'The Truth About Tulum: Risks & Opportunities',
       'https://www.youtube.com/embed/EDm29GCcy0A?autoplay=1&rel=0&modestbranding=1'
-    );
-  }, [openModal]);
-
-  const openPDF = useCallback(() => {
-    openModal(
-      'Professional Credentials — Augusto Lascano · CONOCER · Gobierno de México',
-      'credencial-augusto-lascano.pdf'
     );
   }, [openModal]);
 
@@ -103,7 +96,7 @@ export function UIProvider({ children }) {
   const closeAboutMe = useCallback(() => setAboutMeOpen(false), []);
 
   const value = {
-    modal, openModal, closeModal, openVideoModal, openPDF,
+    modal, openModal, closeModal, openVideoModal,
     gallery, openGallery, setGalleryIndex, closeGallery,
     enclave, openEnclave, closeEnclave,
     leadModal, openLeadModal, closeLeadModal,

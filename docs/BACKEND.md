@@ -39,6 +39,47 @@ cierre, Augusto anota cada consulta de WhatsApp en la planilla: `form_id` =
 `whatsapp_manual`, `ref` = el código `Ref:` que trae el mensaje (por ejemplo
 `IG-BIO-HALO`), y el resto de las columnas que sepa.
 
+## Formularios
+
+| Página | `form_id` | Dónde queda |
+| --- | --- | --- |
+| `/rentas` (Prefer email?) | `rental_inquiry`, `villa_inquiry` | pestaña Leads |
+| Guías del Toolkit | `guide_download` | pestaña Leads |
+| `/start` (link de la bio) | `profile_intake`: nombre, correo, teléfono, qué busca, presupuesto, plazo y permiso opcional de novedades (`marketing_ok`) | pestaña Leads |
+| `/feedback` (encuesta) | `feedback`: puntaje 1–5, cómo se sintió, si recomendaría, comentario; nombre/correo opcionales | pestaña Feedback |
+
+Links para usar:
+
+- Bio de Instagram: `https://eldoctorinmobiliario.com/start?utm_source=instagram&utm_medium=social&utm_campaign=bio`
+- Encuesta: `https://eldoctorinmobiliario.com/feedback?utm_source=email&utm_medium=email&utm_campaign=feedback`
+
+## Correo a los leads
+
+En la planilla: menú **El Doctor → Preparar correo a los leads**. Crea borradores en
+el Gmail de Augusto (no envía nada) con los correos de la pestaña Leads en CCO, sin
+repetidos y sin quienes tengan `email_optout` = `Sí`. El asunto y el texto están al
+principio de la sección "CORREO A LOS LEADS" de `Code.gs` (por defecto: pedido de
+opinión con el link a `/feedback`).
+
+- La primera vez pide autorizar Gmail.
+- Cuenta gratuita de Gmail: unos 500 destinatarios por día. Se arman borradores de 90.
+- **Promociones o boletines:** poner `SOLO_CON_PERMISO_DE_NOVEDADES = true`. Quienes no
+  marcaron la casilla de novedades dieron su correo para una consulta puntual; enviarles
+  publicidad no está cubierto por ese consentimiento.
+- Si alguien responde "unsubscribe", poner `Sí` en su columna `email_optout`.
+
+## Documentos PDF
+
+El sitio muestra el botón de un PDF solo si el archivo está en `public/` al hacer el
+build (`next.config.mjs` → `lib/documents.js`). Para publicarlo: subir el archivo con
+el nombre exacto y volver a desplegar.
+
+| Archivo en `public/` | Botón |
+| --- | --- |
+| `Mexico-Real-Estate-Investment-Guide.pdf` | Toolkit: Mexico Investment Guide |
+| `MoXi-Mortgage-Solutions.pdf` | Toolkit: Mortgage Solutions via MoXi (**falta**) |
+| `credencial-augusto-lascano.pdf` | About Me: View Credentials (**falta**) |
+
 ## Puesta en marcha (una sola vez)
 
 ### 1. Planilla y Apps Script (desde la cuenta de Google de Augusto)
@@ -47,8 +88,10 @@ cierre, Augusto anota cada consulta de WhatsApp en la planilla: `form_id` =
 2. Extensiones → Apps Script. Pegar el contenido de
    `integrations/google-apps-script/Code.gs` y guardar.
    Elegir `configurarCRM` en el menú de funciones y tocar **Ejecutar** (autorizar
-   los permisos). Crea la pestaña "Leads" con listas desplegables, la pestaña
-   "Resumen" y pone la zona horaria de Tulum. Se puede repetir sin perder datos.
+   los permisos). Crea la pestaña "Leads" con listas desplegables, las pestañas
+   "Feedback" y "Resumen" y pone la zona horaria de Tulum. Se puede repetir sin
+   perder datos: así se agregan las columnas nuevas (`timeline`, `marketing_ok`,
+   `email_optout`) al final de una planilla que ya existe.
 3. Configuración del proyecto → Propiedades del script → agregar:
    - `WEBHOOK_SECRET`: una clave larga al azar (por ejemplo, generada con
      `openssl rand -hex 32`). No la escribas en el código ni en el chat.

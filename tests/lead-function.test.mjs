@@ -181,3 +181,62 @@ test('villa: valida fechas y huéspedes', () => {
   assert.equal(validateLead('villa_inquiry', { ...validVilla, guests: '2.5' }).error, 'invalid_guests');
   assert.equal(validateLead('villa_inquiry', { ...validVilla, consent: false }).error, 'missing_consent');
 });
+
+const validIntake = {
+  name: 'Ana', email: 'ana@example.com', whatsapp: '+1 555 123 4567',
+  interest: 'invest', timeline: '3_6_months', budget_range: 'buy_300k_600k',
+  message: '', ref: 'IG-BIO', consent: true, company: '',
+};
+
+test('/start: guarda contacto, preguntas y permiso de novedades', async () => {
+  const sheets = sheetsMock();
+  const res = await handleLead(
+    request({ ...payload({ ...validIntake, marketing_opt_in: true }), form_id: 'profile_intake', page: '/start' }),
+    ENV, sheets.fetchImpl,
+  );
+  assert.equal(res.status, 200);
+  const { row } = sheets.calls[0].body;
+  assert.equal(row.form_id, 'profile_intake');
+  assert.equal(row.timeline, '3_6_months');
+  assert.equal(row.budget_range, 'buy_300k_600k');
+  assert.equal(row.marketing_ok, 'Sí');
+});
+
+test('/start: nombre, correo y teléfono son obligatorios', () => {
+  assert.equal(validateLead('profile_intake', { ...validIntake, whatsapp: '' }).error, 'missing_whatsapp');
+  assert.equal(validateLead('profile_intake', { ...validIntake, email: '' }).error, 'missing_email');
+  assert.equal(validateLead('profile_intake', { ...validIntake, consent: false }).error, 'missing_consent');
+  assert.equal(validateLead('profile_intake', validIntake).data.marketing_ok, 'No', 'sin la casilla no hay permiso');
+});
+
+test('/start: el presupuesto tiene que corresponder a lo que busca', () => {
+  assert.equal(validateLead('profile_intake', { ...validIntake, budget_range: '' }).error, 'missing_budget_range');
+  assert.equal(validateLead('profile_intake', { ...validIntake, budget_range: 'rent_2k_4k' }).error, 'invalid_budget_range');
+  assert.equal(validateLead('profile_intake', { ...validIntake, interest: 'otra' }).error, 'invalid_interest');
+  assert.equal(validateLead('profile_intake', { ...validIntake, timeline: 'ya' }).error, 'invalid_timeline');
+  const rent = validateLead('profile_intake', { ...validIntake, interest: 'rent_long_term', budget_range: 'rent_2k_4k' });
+  assert.equal(rent.error, undefined);
+  const villa = validateLead('profile_intake', { ...validIntake, interest: 'villa_stay', budget_range: '' });
+  assert.equal(villa.error, undefined, 'para villas no se pregunta presupuesto');
+  const villaWithBudget = validateLead('profile_intake', { ...validIntake, interest: 'villa_stay', budget_range: 'buy_over_1m' });
+  assert.equal(villaWithBudget.error, 'invalid_budget_range');
+});
+
+const validFeedback = { rating: '5', feeling: 'confident', recommend: 'yes', comment: 'Great', name: '', email: '', company: '' };
+
+test('encuesta: anónima se guarda sin consentimiento', async () => {
+  const sheets = sheetsMock();
+  const res = await handleLead(request({ ...payload(validFeedback), form_id: 'feedback', page: '/feedback' }), ENV, sheets.fetchImpl);
+  assert.equal(res.status, 200);
+  assert.equal(sheets.calls[0].body.row.rating, '5');
+  assert.equal(sheets.calls[0].body.row.form_id, 'feedback');
+});
+
+test('encuesta: valida respuestas y pide consentimiento si deja datos', () => {
+  assert.equal(validateLead('feedback', { ...validFeedback, rating: '6' }).error, 'invalid_rating');
+  assert.equal(validateLead('feedback', { ...validFeedback, rating: '' }).error, 'missing_rating');
+  assert.equal(validateLead('feedback', { ...validFeedback, feeling: 'meh' }).error, 'invalid_feeling');
+  assert.equal(validateLead('feedback', { ...validFeedback, email: 'a@b.co' }).error, 'missing_consent');
+  assert.equal(validateLead('feedback', { ...validFeedback, email: 'a@b.co', consent: true }).error, undefined);
+  assert.equal(validateLead('feedback', { ...validFeedback, email: 'mal' , consent: true }).error, 'invalid_email');
+});

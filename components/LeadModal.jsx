@@ -5,11 +5,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useUI } from '../context/UIContext';
 import { submitLead } from '../lib/submitLead';
 import { trackFormStart } from '../lib/track';
+import { toolkitData } from '../data/content';
 
-const guideFiles = {
-  'Mexico Investment Guide': '/Mexico-Real-Estate-Investment-Guide.pdf',
-  'MoXi Mortgage Solutions': '/MoXi-Mortgage-Solutions.pdf',
-};
+const guideFiles = Object.fromEntries(toolkitData.map((g) => [g.guideName, `/${g.file}`]));
 
 export default function LeadModal() {
   const { leadModal, closeLeadModal } = useUI();

@@ -3,9 +3,10 @@
 import Reveal from './Reveal';
 import { toolkitData } from '../data/content';
 import { useUI } from '../context/UIContext';
+import { hasDocument } from '../lib/documents';
 
-// Solo se muestran las guías que ya tienen su PDF en public/ (ver data/content.js).
-const availableGuides = toolkitData.filter((item) => item.available !== false);
+// Solo se muestran las guías que ya tienen su PDF en public/ (ver lib/documents.js).
+const availableGuides = toolkitData.filter((item) => hasDocument(item.file));
 
 export default function Toolkit() {
   const { openLeadModal } = useUI();

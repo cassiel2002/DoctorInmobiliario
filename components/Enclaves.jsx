@@ -47,11 +47,13 @@ export default function Enclaves() {
 
       <div className="enclaves-grid" ref={gridRef}>
         {enclavesData.map((enclave, i) => (
-          <Reveal key={enclave.name} delay={i * 0.06} amount={0.15}>
-            <div
-              className="enclave-card"
-              onClick={() => openEnclave(enclave.name, enclave.url)}
-            >
+          <Reveal
+            key={enclave.name}
+            className="enclave-card"
+            delay={i * 0.06}
+            amount={0.15}
+            onClick={() => openEnclave(enclave.name, enclave.url)}
+          >
               <Image
                 className="enclave-img"
                 src={img(enclave.img)}
@@ -73,7 +75,6 @@ export default function Enclaves() {
                   Access Technical Thesis
                 </button>
               </div>
-            </div>
           </Reveal>
         ))}
       </div>

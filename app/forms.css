@@ -1,0 +1,50 @@
+/* ── Páginas de formulario: /start y /feedback (tema oscuro del sitio) ── */
+.fp { min-height: 100vh; display: flex; flex-direction: column; }
+.fp-header { padding: 1.4rem 2rem; border-bottom: 1px solid rgba(197,160,89,0.15); }
+.fp-logo { font-family: 'Bodoni Moda', serif; font-size: 1.25rem; color: var(--gold); text-decoration: none; letter-spacing: 0.05em; }
+.fp-logo span { display: block; font-family: 'Raleway', sans-serif; font-size: 0.8rem; color: var(--white-dim); letter-spacing: 0.14em; text-transform: uppercase; }
+.fp-main { flex: 1; width: 100%; max-width: 720px; margin: 0 auto; padding: 3.5rem 1.5rem 4rem; }
+.fp-title { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1.2rem; }
+.fp-intro { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: var(--white-dim); line-height: 1.6; margin: 1.2rem 0 2rem; }
+.fp-card { background: var(--black-card); border: 1px solid var(--black-border); padding: 2rem; margin-top: 1.5rem; position: relative; }
+.fp-card p { font-size: 1.05rem; color: var(--white-dim); margin-bottom: 1rem; }
+.fp-card .form-field label { font-size: 0.82rem; }
+.fp-card textarea {
+  width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--black-border); color: var(--white);
+  padding: 0.7rem 1rem; font-size: 1.02rem; font-family: 'Inter', sans-serif; outline: none; resize: vertical;
+}
+.fp-card textarea:focus { border-color: rgba(197,160,89,0.5); }
+.fp-choices { border: none; margin: 1.6rem 0 1rem; }
+.fp-choices legend { font-size: 1.02rem; color: var(--white); margin-bottom: 0.8rem; line-height: 1.5; }
+.fp-choice-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+.fp-choice-list label, .fp-rating label {
+  position: relative; display: flex; align-items: center; justify-content: center; text-align: center;
+  min-height: 3rem; padding: 0.6rem 0.8rem; cursor: pointer;
+  border: 1px solid var(--black-border); background: rgba(255,255,255,0.03);
+  font-size: 0.95rem; color: var(--white-dim); line-height: 1.35;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.fp-choice-list label:hover, .fp-rating label:hover { border-color: rgba(197,160,89,0.5); }
+.fp-choice-list label.active, .fp-rating label.active { border-color: var(--gold); color: var(--gold); background: rgba(197,160,89,0.08); }
+.fp-choice-list input, .fp-rating input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.fp-choice-list label:has(input:focus-visible), .fp-rating label:has(input:focus-visible) { outline: 1px solid var(--gold); outline-offset: 2px; }
+.fp-rating { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
+.fp-rating label { font-family: 'Bodoni Moda', serif; font-size: 1.4rem; }
+.fp-rating-legend { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--white-muted); margin-top: 0.4rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.fp-error { color: #e2746a; font-size: 0.9rem; margin-top: 0.4rem; }
+.fp-alert { margin: 1rem 0; padding: 1rem 1.2rem; border: 1px solid #e2746a; color: #f0b2aa; font-size: 0.95rem; }
+.fp-alert .rentals-link-button { color: var(--gold); background: none; border: none; text-decoration: underline; cursor: pointer; font: inherit; padding: 0; }
+.fp-actions { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 1.2rem; }
+.fp-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.fp-footer { padding: 1.5rem 2rem; font-size: 0.85rem; color: var(--white-muted); border-top: 1px solid var(--black-border); }
+.fp-footer a { color: var(--gold); }
+.fp .form-submit { margin-top: 1.2rem; }
+.fp .form-submit:disabled { opacity: 0.6; cursor: wait; }
+
+@media (max-width: 600px) {
+  .fp-header { padding: 1rem 1.1rem; }
+  .fp-main { padding: 2rem 1.1rem 3rem; }
+  .fp-card { padding: 1.4rem 1.1rem; }
+  .fp-choice-list { grid-template-columns: 1fr; }
+  .fp-actions a, .fp-actions button { width: 100%; text-align: center; }
+}

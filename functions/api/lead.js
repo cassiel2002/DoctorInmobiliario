@@ -21,6 +21,15 @@
 const MAX_BODY_BYTES = 10_000;
 const MIN_ELAPSED_MS = 2_500; // una persona no completa el formulario en menos tiempo
 
+// Respuestas de /start. El presupuesto depende de lo que busca la persona
+// (compra: precio total; renta anual: por mes). Para villas no se pregunta.
+const INTERESTS = ['invest', 'live', 'rent_long_term', 'villa_stay'];
+const BUDGETS = {
+  buy: ['buy_under_300k', 'buy_300k_600k', 'buy_600k_1m', 'buy_over_1m'],
+  rent: ['rent_under_2k', 'rent_2k_4k', 'rent_over_4k'],
+};
+const BUDGET_KIND = { invest: 'buy', live: 'buy', rent_long_term: 'rent' };
+
 const SCHEMAS = {
   // Formularios cortos: WhatsApp es la vía principal y la calificación
   // (presupuesto, mascotas, dormitorios, ocasión) la hace Augusto en la conversación.
@@ -50,6 +59,35 @@ const SCHEMAS = {
     fields: { name: 120, email: 160, country: 80, guide: 80, interest: 40 },
     enums: {},
     requireConsent: true,
+  },
+  // Página /start (link de la bio de Instagram): contacto completo + 3 preguntas.
+  profile_intake: {
+    required: ['name', 'email', 'whatsapp', 'interest', 'timeline'],
+    oneOf: [],
+    fields: {
+      name: 120, email: 160, whatsapp: 30, interest: 40, timeline: 20, budget_range: 20,
+      message: 1000, ref: 30,
+    },
+    enums: {
+      interest: INTERESTS,
+      timeline: ['0_3_months', '3_6_months', '6_12_months', 'exploring'],
+      budget_range: ['', ...BUDGETS.buy, ...BUDGETS.rent],
+    },
+    requireConsent: true,
+    marketingOptIn: true,
+  },
+  // Página /feedback: encuesta de satisfacción. Nombre y correo son opcionales;
+  // si se dejan, hace falta el consentimiento.
+  feedback: {
+    required: ['rating', 'feeling', 'recommend'],
+    oneOf: [],
+    fields: { rating: 1, feeling: 20, recommend: 10, comment: 1000, name: 120, email: 160, ref: 30 },
+    enums: {
+      rating: ['1', '2', '3', '4', '5'],
+      feeling: ['confident', 'informed', 'undecided', 'overwhelmed'],
+      recommend: ['yes', 'maybe', 'no'],
+    },
+    consentIfAny: ['name', 'email'],
   },
 };
 
@@ -107,7 +145,17 @@ export function validateLead(formId, rawFields) {
     const guests = Number(data.guests);
     if (!Number.isInteger(guests) || guests < 1 || guests > 60) return { error: 'invalid_guests' };
   }
+  if (formId === 'profile_intake') {
+    const kind = BUDGET_KIND[data.interest];
+    if (kind && !data.budget_range) return { error: 'missing_budget_range' };
+    if (data.budget_range && !BUDGETS[kind]?.includes(data.budget_range)) return { error: 'invalid_budget_range' };
+  }
   if (schema.requireConsent && rawFields.consent !== true) return { error: 'missing_consent' };
+  if (schema.consentIfAny?.some((field) => data[field]) && rawFields.consent !== true) {
+    return { error: 'missing_consent' };
+  }
+  // Permiso aparte (casilla opcional) para recibir novedades por correo.
+  if (schema.marketingOptIn) data.marketing_ok = rawFields.marketing_opt_in === true ? 'Sí' : 'No';
 
   return { data };
 }

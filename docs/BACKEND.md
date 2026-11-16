@@ -77,8 +77,8 @@ el nombre exacto y volver a desplegar.
 | Archivo en `public/` | Botón |
 | --- | --- |
 | `Mexico-Real-Estate-Investment-Guide.pdf` | Toolkit: Mexico Investment Guide |
-| `MoXi-Mortgage-Solutions.pdf` | Toolkit: Mortgage Solutions via MoXi (**falta**) |
-| `credencial-augusto-lascano.pdf` | About Me: View Credentials (**falta**) |
+| `MoXi-Mortgage-Solutions.pdf` | Toolkit: Mortgage Solutions via MoXi |
+| `credencial-augusto-lascano.pdf` | About Me: View Credentials |
 
 ## Puesta en marcha (una sola vez)
 
